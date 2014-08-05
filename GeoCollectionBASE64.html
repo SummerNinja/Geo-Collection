@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+    <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script>
+        var myDataRef = new Firebase('https://geocollection.firebaseio.com/');
+    </script>
+    <script>
+        function previewFile() {
+            var preview = document.querySelector('img');
+            var file    = document.querySelector('input[type=file]').files[0];
+            var reader  = new FileReader();
+
+            reader.onloadend = function () {
+                var blah = reader.result;
+                myDataRef.set(blah);
+                document.getElementById("la").innerHTML= blah;
+            }
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+    </script>
+</head>
+
+<body>
+<div id = "la"></div>
+<<input type="file" onchange="previewFile()"><br>
+<img src="" height="200" alt="Image preview...">
+
+</body>
+
+
+</html>
+
