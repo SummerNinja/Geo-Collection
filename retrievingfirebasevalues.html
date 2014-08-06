@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+	<script>
+		
+		// Ref to Firebase Database
+		var myDataRef = new Firebase('https://testingsetting.firebaseio.com/');
+		
+		
+		// Creates child in database for each collection & a variable through which to add stuff to the child
+		var spainRef = myDataRef.child("spain");
+			
+			//Set can only be used for the first child added as it will overwrite any data if used after
+			spainRef.set({
+				//Adds a photo object to the collection 
+				photo1: {src: "http://forums.riftgame.com/avatars/menaace.gif?dateline=1321889391", lat: 12.34, longt: 123.1}});
+			
+			// To add additional photos, use the update() method
+			spainRef.update({photo2: {src: "http://forums.riftgame.com/avatars/menaace.gif?dateline=1321889391", lat: 28, longt: 132 }});		
+		/*
+		//adding second collection
+		var NYCRef = myDataRef.child("nyc");
+			NYCRef.set({photo1: {a: "yeah", b: "ey"},
+			photo2: {bam: "what what", src: "yea"}});
+		*/
+		
+		myDataRef.on('value', function (snapshot) {
+			var ahh = snapshot.val();
+			//var collections = snapshot.child('spain/photo1');
+			var Lat = ahh.spain.photo1.lat;
+			
+			document.getElementById("la").innerHTML= Lat;
+			//console.log(Lat);
+		  });
+		  
+	    function getSpainLat()
+		{
+			myDataRef.once('value', function(snapshot)
+			{
+				console.log("level 1");
+				snapshot.forEach(function(snapshot2)
+				{
+					console.log("level 2");
+					snapshot2.forEach(function (snapshot3)
+					{
+						console.log("level 3");
+						var toPrint = snapshot3.val();
+							var Lat = toPrint.lat;
+							var Longt = toPrint.longt;
+							var Src = toPrint.src;
+						console.log(Lat);
+						console.log(Longt);
+						console.log(Src);
+						
+						document.getElementById("yay").src = Src;
+						
+					});
+					/*var spainSnapshot = snapshot.val();
+					console.log("spainSnapshot: " + spainSnapshot);		
+					var Lat = spainSnapshot.spain.photo1.lat;
+					console.log("Lat: " + Lat);
+					return Lat;*/				
+				});
+				
+			});
+		}
+
+		
+		getSpainLat();
+		//var fruit = getSpainLat();
+		//console.log(fruit);
+		
+		//var currentLocationLongt = getSpainLongt();
+		//console.log(currentLocationLat + " " + currentLocationLongt);
+		
+		
+	</script>
+
+</head>
+
+<body>
+<div id = "la"> </div>
+<img id = "yay" src="">
+</body>
+
+
+</html>
