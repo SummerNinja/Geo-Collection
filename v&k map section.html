@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+
+<!-- saved from url=(0023)http://www.contoso.com/ -->
+
+<html>
+<!--http://static.lockerz.com/profiles/large/image001340121902899ujns0c.png-->
+<head>
+    <title>Geo collection</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <!--<link rel="stylesheet" href="style.css"/>-->
+        <style>
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px
+        }
+        #panel {
+            position: absolute;
+            top: 1px;
+            left: 1%;
+        }
+        </style>
+        <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+
+</head>
+<body>
+
+
+<!--This is the first page-->
+<div data-role="page" id="first">
+
+    <div data-role="header">
+        <h1>Geo Collection</h1>
+    </div>
+
+    <div data-role="content">
+        <a href="#second"><button type="submit">Map</button></a>
+
+    </div>
+
+    <div data-role="content">
+        <a href="#third"><button type="submit">Collection</button></a>
+
+    </div>
+    <div data-role="footer">
+         <p></p>
+    </div>
+</div>
+
+
+<!--This is the second page-->
+
+<div data-role="page" id="second">
+
+    <div data-role="header">
+        <h1> Map </h1>
+    </div>
+
+
+    <!-- <div data-role="content">
+         <a href="#third"><button type="submit">Collection</button></a>-->
+
+        <!--div where the map will go-->
+        <div id="map-canvas" style="width:1000px; height:300px;"></div>
+
+    <script>
+        var geocoder;
+        var map;
+        function initialize() {
+            geocoder = new google.maps.Geocoder();
+            var latlng = new google.maps.LatLng(0, 0);
+            var mapOptions = {
+                zoom: 2,
+                center: latlng
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+        }
+
+        function codeAddress() {
+            var address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+    <div id="panel">
+        <input id="address" type="textbox" value="">
+        <input type="button" value="Submit Location" onclick="codeAddress()">
+    </div>
+    <div id="map-canvas"></div>
+
+    <div data-role="footer">
+        <a href="#first">back</a>
+        <a href="#third">next</a>
+     </div>
+
+</div>
+
+
+
+
+    <!--<div data-role="footer">
+        <a href="#first">back</a>
+        <a href="#third">next</a>
+    </div>-->
+
+</div>
+
+<!-- This is the third page-->
+
+<div data-role="page" id="third">
+
+    <div data-role="header">
+        <h1>Collection</h1>
+    </div>
+    <div data-role="content">
+
+    </div>
+    <div data-role="footer">
+        <a href="#second">back</a>
+        <a href="#first">home</a>
+    </div>
+
+</div>
+
+
+</body>
+</html>
