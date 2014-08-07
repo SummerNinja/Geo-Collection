@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js'></script>
+	<script>
+		
+		// Ref to Firebase Database
+		var myDataRef = new Firebase('https://testingsetting.firebaseio.com/');
+		var srcList = [];
+		var latList = [];
+		var longtList = [];
+		
+		console.log(" beginning: ");
+		console.log(latList);
+		console.log(latList.length);
+		
+		// Creates child in database for each collection & a variable through which to add stuff to the child
+		var spainRef = myDataRef.child("spain");
+			//Set can only be used for the first child added as it will overwrite any data if used after
+			spainRef.set({
+				//Adds a photo object to the collection 
+				photo1: {src: "http://www.squishable.com/user_gallery/opensquish_guinea_pig_10341/opensquish_guinea_pig_10341_user1.jpg", lat: 12.34, longt: 123.1}});
+			// To add additional photos, use the update() method
+			spainRef.update({photo2: {src: "http://forums.riftgame.com/avatars/menaace.gif?dateline=1321889391", lat: 28, longt: 132 }});				
+		
+		myDataRef.on('value', function (snapshot) {
+			var ahh = snapshot.val();
+			var Lat = ahh.spain.photo1.lat;
+			document.getElementById("la").innerHTML= Lat;
+			//console.log(Lat);
+		  });
+		  
+	    function getSpainData()
+		{
+			//setTimeout(function(){console.log("done waiting")},3000);
+			myDataRef.once('value', function(snapshot)
+			{
+				//console.log("level 1");
+				snapshot.forEach(function(snapshot2)
+				{
+					//console.log("level 2");
+					var i = 0;
+					snapshot2.forEach(function (snapshot3)
+					{
+						//console.log("level 3");
+						var toPrint = snapshot3.val();
+							var Lat = toPrint.lat;
+							var Longt = toPrint.longt;
+							var Src = toPrint.src;
+						
+						/* Logs values to be pushed
+						console.log("logging values: ");
+						console.log(Lat);
+						console.log(Longt);
+						console.log(Src);
+						*/
+						
+						//pushes values to corresponding lists
+						latList.push(Lat);
+						console.log("latList is: ");
+						console.log(latList);
+						longtList.push(Longt);
+						srcList.push(Src);
+						
+						
+						// i must be equal to (#ofPhotos - 1) so that this will execute right before the function ends
+						if(i === 1)
+						{
+							//document.getElementById("wahoo").src = Src;
+							/*********
+								any functions that need to be called after accesssing
+								the data needs to be put here so that this function will							
+								have finished running before the other funcrtions are called
+								ex: logLists() in this case
+							*********/
+							//logLists();
+							renderPhoto(0);
+						}
+						i++;
+					});	
+				});
+			});
+		}
+
+		
+		// logs the lists to ensure that the values were pushed 
+		function logLists()
+		{
+			console.log("later: ");
+			console.log(latList);
+			console.log(longtList);
+			console.log(srcList);
+			
+			var lat1 = latList.length;
+			console.log(lat1);
+			
+			console.log("photo1's location is at: " + latList[0] + " , "  + latList[1]);
+		}
+		
+		//gets base64 code for photo of index photo# in the srcList
+		//pushes that to img tag "la" to display it
+		function renderPhoto(photoIndex)
+		{
+			var imgSrc = srcList[photoIndex];
+			console.log(imgSrc);
+			document.getElementById("yay").src= imgSrc;
+		}
+		
+		getSpainData();
+		//setTimeout(logLists(),5000);
+		
+	</script>
+
+</head>
+
+<body>
+	<div id = "la"> </div>
+	<p>
+		<img id = "yay" src="">
+	</p>
+	<!--
+	<p>
+		<img id = "wahoo" src="">
+	</p> -->
+</body>
+
+
+</html>
