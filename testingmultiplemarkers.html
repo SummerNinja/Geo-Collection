@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <meta charset="utf-8">
+    <title>Info windows</title>
+    <style>
+      html, body, #map-canvas {
+        height: 100%;
+        margin: 0px;
+        padding: 0px
+      }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script>
+// This example displays a marker at the center of Australia.
+// When the user clicks the marker, an info window opens.
+
+function initialize() {
+  var myLatlng = new google.maps.LatLng(-25.363882,131.044922);
+  var mapOptions = {
+    zoom: 4,
+    center: myLatlng
+  };
+
+  var map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+
+  var contentString = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h1 id="firstHeading" class="firstHeading">Uluru</h1>'+
+      '<div id="bodyContent">'+
+      '<p><b>Uluru</b>, also referred to as <b>Ayers Rock</b>, is a large ' +
+      'sandstone rock formation in the southern part of the '+
+      'Northern Territory, central Australia. It lies 335&#160;km (208&#160;mi) '+
+      'south west of the nearest large town, Alice Springs; 450&#160;km '+
+      '(280&#160;mi) by road. Kata Tjuta and Uluru are the two major '+
+      'features of the Uluru - Kata Tjuta National Park. Uluru is '+
+      'sacred to the Pitjantjatjara and Yankunytjatjara, the '+
+      'Aboriginal people of the area. It has many springs, waterholes, '+
+      'rock caves and ancient paintings. Uluru is listed as a World '+
+      'Heritage Site.</p>'+
+      '<p>Attribution: Uluru, <a href="http://en.wikipedia.org/w/index.php?title=Uluru&oldid=297882194">'+
+      'http://en.wikipedia.org/w/index.php?title=Uluru</a> '+
+      '(last visited June 22, 2009).</p>'+
+      '</div>'+
+      '</div>';
+	  
+	var contentString2 = '<div id="content">'+
+      '<div id="siteNotice">'+
+      '</div>'+
+      '<h1 id="firstHeading" class="firstHeading">Test</h1>'+
+      '<div id="bodyContent">'+'<img id = "yay" src="http://forums.riftgame.com/avatars/menaace.gif?dateline=1321889391">'+
+      '<p><b>trying stuff out</b> la la la </p>'+ '</div>'+'</div>';
+
+  var infowindow = new google.maps.InfoWindow({
+      content: contentString
+  });
+
+  var infowindow2 = new google.maps.InfoWindow({
+      content: contentString2
+  });
+  
+  var marker = new google.maps.Marker({
+      position: myLatlng,
+      map: map,
+      title: 'Uluru (Ayers Rock)'
+  });
+  
+  var marker2 = new google.maps.Marker({
+      position: {lat: -34, lng: 151},
+      map: map,
+      title: 'Sydney hey'
+  });
+  
+  google.maps.event.addListener(marker, 'click', function() {
+    infowindow.open(map,marker);
+	infowindow2.close(map,marker2);
+  });
+
+
+google.maps.event.addListener(marker2, 'click', function() {
+    infowindow2.open(map,marker2);
+	infowindow.close(map,marker);
+  });
+}
+
+ /**
+ * Data for the markers consisting of a name, a LatLng and a zIndex for
+ * the order in which these markers should display on top of each
+ * other.
+ */
+var beaches = [
+	['Pike Place', 47.609860, -122.341589,7],
+	['Westlake Centre', 47.612163, -122.337872, 6],
+	['Capitol Hill', 47.623557, -122.321234, 5],
+	['Seattle Centre', 47.621515, -122.348199, 4],
+	['Space Needle', 47.620553, -122.349331, 3],
+	['University of Washington/U District', 47.657382, -122.307071, 2],
+	['Freemont', 47.658571, -122.350278, 1]
+];
+
+function setMarkers(map, locations) {
+            // Add markers to the map
+
+            // Marker sizes are expressed as a Size of X,Y
+            // where the origin of the image (0,0) is located
+            // in the top left of the image.
+
+            // Origins, anchor positions and coordinates of the marker
+            // increase in the X direction to the right and in
+            // the Y direction down.
+          
+            for (var i = 0; i < locations.length; i++) {
+                var beach = locations[i];
+                var myLatLng = new google.maps.LatLng(beach[1], beach[2]);
+                var marker = new google.maps.Marker({
+                    position: myLatLng,
+                    map: map,
+                    icon: image,
+                    shape: shape,
+                    title: beach[0],
+                    zIndex: beach[3]
+                });
+            }
+        }
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+  </head>
+  <body>
+    <div id="map-canvas"></div>
+  </body>
+</html>
