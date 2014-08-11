@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+
+<!-- saved from url=(0023)http://www.contoso.com/ -->
+
+<html>
+<!--http://static.lockerz.com/profiles/large/image001340121902899ujns0c.png-->
+<head>
+    <title>Geo collection</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src='https://cdn.firebase.com/js/client/1.0.15/firebase.js'></script>
+    <link rel="stylesheet" href="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.css" />
+    <script src="https://code.jquery.com/jquery-1.9.1.min.js"></script>
+    <script src="https://code.jquery.com/mobile/1.3.1/jquery.mobile-1.3.1.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <!--<link rel="stylesheet" href="style.css"/>-->
+    <script>
+        var myDataRef = new Firebase('https://geocollection.firebaseio.com/')
+        var lat;
+        var long;
+        var address;
+
+        function previewFile() {
+            var preview = document.querySelector('img');
+            var file    = document.querySelector('input[type=file]').files[0];
+            var reader  = new FileReader();
+
+            reader.onloadend = function () {
+                var blah = reader.result;
+                var photoList=[];
+                photoList.push(blah);
+                myDataRef.push({lat:lat, longt:long, name:address, photoList:photoList});
+                document.getElementById("la").innerHTML= blah;
+                document.getElementById("image").src=blah;
+      };
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                preview.src = "";
+            }
+        }
+		var infoWindowList = [];
+		var markerList = [];
+        var geocoder;
+        var map;
+        function initialize() {
+			
+			
+			
+            geocoder = new google.maps.Geocoder();
+            var latlng = new google.maps.LatLng(0, 0);
+            var mapOptions = {
+                zoom: 2,
+                center: latlng
+            }
+            map = new google.maps.Map(document.getElementById('map-canvas'), mapOptions);
+			
+			myDataRef.once('value', function(ts) {
+			var i = 0;
+				ts.forEach(function(ts) {
+					//console.log("in once");
+					var Lat = ts.child('lat').val();
+					var Longt = ts.child('longt').val();
+					var Name = ts.child('name').val();
+					var PhotoList = ts.child('photoList').val();
+					displayCollection(Lat,Longt,Name,i, PhotoList);
+					setMarker(Lat,Longt,i);
+					addClickFunctionListeners(i);
+					i = i + 1;
+			  });
+			});
+			
+			
+        }
+
+		function displayCollection(lat,longt,name, loopNum, PL)
+			{
+				//console.log(lat,longt,name, loopNum);
+				var pos = new google.maps.LatLng(lat,longt);
+				//console.log(pos);
+				
+				infoWindowList.push(new google.maps.InfoWindow({
+				content: name
+				}));
+				console.log("info list at " + loopNum + " is " + infoWindowList[loopNum].content);
+				
+				infoWindowList[loopNum].setOptions({position: pos, maxWidth: 70});
+				//infoWindowList[loopNum].open(map);
+			}
+			
+			function setMarker(lat,longt, loopNum)
+			{
+				console.log("marker parameters: ", lat, longt, loopNum);
+				
+				var pos = new google.maps.LatLng(lat,longt);
+				
+				markerList.push(new google.maps.Marker({
+					position: pos,
+					map: map,
+				}));
+				
+			}
+			
+			function addClickFunctionListeners(i)
+			{
+				console.log("first: " + infoWindowList);
+				console.log("second: " + infoWindowList[i].getContent());
+				//infoWindowList[i].open(map);
+				
+					google.maps.event.addListener(markerList[i], 'click', function() {
+						infoWindowList[i].open(map);
+					});
+			
+			}
+			
+
+        function codeAddress() {
+            address = document.getElementById('address').value;
+            geocoder.geocode( { 'address': address}, function(results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    map.setCenter(results[0].geometry.location);
+                    var marker = new google.maps.Marker({
+                        map: map,
+                        position: results[0].geometry.location
+                    });
+                    lat=results[0].geometry.location.lat();
+                    long = results[0].geometry.location.lng();
+                    console.log("lat" + results[0].geometry.location.lat() + "long" + results[0].geometry.location.lng());
+                } else {
+                    alert('Geocode was not successful for the following reason: ' + status);
+                }
+            });
+        }
+		
+		/******** TO WORK ON FOR MARKER CLICKS
+		function openInfoWindow()
+		{
+			
+		}
+		******************/
+		
+        google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script>
+
+    <style>
+        html, body, #map-canvas {
+            height: 100%;
+            margin: 0px;
+            padding: 0px
+        }
+        #panel {
+            position: absolute;
+            top: 250px;
+            left: 1%;
+        }
+    </style>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
+</head>
+<body>
+
+
+<!--This is the first page-->
+<div data-role="page" id="first">
+
+    <div data-role="header">
+        <h1>Geo Collection</h1>
+    </div>
+
+    <div data-role="content">
+        <a href="#second"><button type="submit">Map</button></a>
+
+    </div>
+
+    <div data-role="content">
+        <a href="#third"><button type="submit">Collection</button></a>
+
+    </div>
+    <div data-role="footer">
+        <p></p>
+    </div>
+</div>
+
+
+<!--This is the second page-->
+
+<div data-role="page" id="second">
+
+    <div data-role="header">
+        <h1> Map </h1>
+    </div>
+
+
+    <!-- <div data-role="content">
+         <a href="#third"><button type="submit">Collection</button></a>-->
+
+    <!--div where the map will go-->
+    <div id="map-canvas" style="width: 700px; height:300px;"></div>
+
+
+
+
+    <div id="panel">
+        <input id="address" type="textbox" value="">
+        <input type="button" value="Submit Location" onclick="codeAddress()">
+    </div>
+    <div id="map-canvas"></div>
+
+
+
+    <div id = "la"></div>
+    <input type="file" onchange="previewFile()"><br>
+
+    <div data-role="footer">
+        <a href="#first">back</a>
+        <a href="#third">next</a>
+    </div>
+
+</div>
+
+
+
+
+<!--<div data-role="footer">
+    <a href="#first">back</a>
+    <a href="#third">next</a>
+</div>-->
+
+</div>
+
+<!-- This is the third page-->
+
+<div data-role="page" id="third">
+
+    <div data-role="header">
+        <h1>Collection</h1>
+    </div>
+    <div data-role="content">
+
+        <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <title>Collections</title>
+            <link rel="stylesheet" href="//code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css">
+            <script src="//code.jquery.com/jquery-1.10.2.js"></script>
+            <script src="//code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+        </head>
+        <body>
+
+        <div id="accordion">
+            <h3>Nicaragua</h3>
+            <div>
+                <p></p>
+            </div>
+            <h3>Espania</h3>
+            <div>
+                <p></p>
+            </div>
+            <h3>Brasil</h3>
+            <div>
+                <p></p>
+                <ul>
+                    <li>List item one</li>
+                    <li>List item two</li>
+                    <li>List item three</li>
+                </ul>
+            </div>
+        </div>
+
+        <script>
+            $( "#accordion" ).accordion();
+        </script>
+
+        </body>
+        </html>
+
+   </div>
+    <div data-role="footer">
+        <a href="#second">back</a>
+        <a href="#first">home</a>
+    </div>
+
+</div>
+
+
+</body>
+</html>
