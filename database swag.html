@@ -22,7 +22,7 @@
 
         function previewFile() {
             var preview = document.querySelector('img');
-            var file    = document.querySelector('input[type=file]').files[0];
+            var file    = document.querySelector('input[type=file]').files;
             var reader  = new FileReader();
 
             reader.onloadend = function () {
@@ -32,7 +32,7 @@
                 myDataRef.push({lat:lat, longt:long, name:address, photoList:photoList});
                 document.getElementById("la").innerHTML= blah;
                 document.getElementById("image").src=blah;
-      };
+            };
 
             if (file) {
                 reader.readAsDataURL(file);
@@ -143,7 +143,7 @@
 
 
     <div id = "la"></div>
-    <input type="file" onchange="previewFile()"><br>
+    <input type="file" multiple="" onchange="previewFile()"><br>
 
     <div data-role="footer">
         <a href="#first">back</a>
@@ -208,7 +208,7 @@
         </body>
         </html>
 
-   </div>
+    </div>
     <div data-role="footer">
         <a href="#second">back</a>
         <a href="#first">home</a>
