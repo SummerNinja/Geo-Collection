@@ -24,8 +24,9 @@
     </script>
     <script>
         $(document).ready(function() {
-            var myDataRef = new Firebase('https://geocollection.firebaseio.com/')
+            var myDataRef = new Firebase('https://testingsetting.firebaseio.com/')
             var Name = Name;
+            var PL = PL;
             myDataRef.once('value', function (ts) {
                 var i = 0;
 
@@ -35,19 +36,45 @@
                     // var Lat = ts.child('lat').val();
                     // var Longt = ts.child('longt').val();
                     Name = ts.child('name').val();
+                    PL = ts.child('photoList').val();
                     console.log(Name);
                     //displayCollection(Lat,Longt,Name,i);
                     i = i + 1;
                     $("<h3 />").text(Name).appendTo($('#accordion'));
-                    $("<div />").text("hi").appendTo($('#accordion'));
-                   
+                    $('<div/>', { 'id': Name});
+                    document.getElementById("#"+Name).innerHTML="hi";
+                    DC(PL,Name);
+
+
+
 
 
                 });
 
+
+
             });
             $("#accordion").accordion();
         });
+        function DC(photoList,Name) {
+            var SC;
+            //console.log(lat,longt,name, loopNum);
+
+            //var pos = new google.maps.LatLng(lat, longt);
+           // var contentString = '<h2>' + name + '<h2>';
+           // for (var i = 0; i < photoList.length; i++) {
+             // SC=  $('<img/>', { src:photoList[i]});
+                //contentString = contentString + '<img src="' + photoList[i] + '" height="50">' + " ";
+              //  console.log(SC);
+                $('#'+Name).append("hi");
+
+
+            //}
+
+
+
+        }
+
 
 
     </script>
