@@ -1,0 +1,21 @@
+Geo-Collection
+Authors: Haika Dabbara, Kamara McGhee, Vyla Phavong, Melanie Mendoza
+Final version: DraftedFinishing.html
+
+Technologies used:
+HTML file, JavaScript, jQuery, Google Maps API, Firebase
+
+Firebase GeoCollection Database Credentials:
+
+
+Description:
+A web application that displays a map with markers pinned to user inputted locations.
+When a pinned marker is clicked, it displays an infoWindow with the name of the location 
+and any photos that the user had added to that location's collection.
+Also on the page is a search bar and search location button which allows users to search
+for a location using the name of the location and then pressing the search button.
+Under the search bar is a file chooser which allows users to add photos to the last searched
+location's collection by browsing and choosing files one at a time.
+At the bottom is a submit button which pushes all of the inputted info into the Firebase Database.
+To see the collection, the user must refresh the map page.
+
